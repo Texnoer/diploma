@@ -15,7 +15,6 @@ class VkUser:
             'access_token': self.token,
             'v': self.version
         }
-
         self.owner_id = you_id
     def get_fotos(self, user_id=None):
         if user_id is None:
@@ -31,7 +30,7 @@ class VkUser:
 
         return photos.json()
 
-    def get_largest(size_dict):
+    def get_largest(self, size_dict):
         # Функция ищет наибольший размер картинки
         if size_dict['width'] >= size_dict['height']:
             return size_dict['width']
@@ -45,13 +44,14 @@ class VkUser:
             sizes = photo['sizes']
             max_size = max(sizes, key=self.get_largest())#['url']
             print(max_size)
+            return max_size
 
 
 vk_foto = VkUser(token, '5.126')
 
 # pprint(vk_foto.get_fotos())
 pprint(vk_foto.get_fotos())#['response']['items'])
-print(vk_foto.sizes_max())
+pprint(vk_foto.sizes_max())
 # ['response']['items'][0]['sizes'][-1]
 
 if __name__ == '__main__':
