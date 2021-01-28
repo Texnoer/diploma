@@ -42,7 +42,8 @@ class VkUser:
         for photo in self.get_fotos():
             sizes = photo['sizes']
             max_size = max(sizes, key=self.get_largest)['url']
-            self.list_photo.append({'url': max_size, 'likes': photo['likes']['count']})
+            type_photo = max(sizes, key=self.get_largest)['type']
+            self.list_photo.append({'url': max_size, 'likes': photo['likes']['count'], 'type': type_photo})
         return self.list_photo
 
 vk_foto = VkUser(token, '5.126')
@@ -57,9 +58,12 @@ class YaUploader:
 
     def upload(self, file_path: str):
         """Метод загруджает файл file_path на яндекс диск"""
+        dict_photo =[]
         for pair in foto_likes:
             url = pair['url']
             likes = pair['likes']
+            size = pair['type']
+            dict_photo.append({"file_name": likes, "size": size})
             response = requests.post(
             "https://cloud-api.yandex.net/v1/disk/resources/upload",
             params={
@@ -68,7 +72,7 @@ class YaUploader:
             },
             headers=HEADERS
         )
-
+        pprint(dict_photo)
 if __name__ == '__main__':
     uploader = YaUploader("token_ya")
     result = uploader.upload('url')
