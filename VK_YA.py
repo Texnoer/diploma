@@ -46,18 +46,16 @@ class VkUser:
         return self.list_photo
 
 vk_foto = VkUser(token, '5.126')
-
+foto_likes = vk_foto.sizes_max()
+for pair in foto_likes:
+    url = pair['url']
+    likes = pair['likes']
+    print(likes)
+    print(url)
 # pprint(vk_foto.get_fotos())
 
-pprint(vk_foto.sizes_max()[0]['likes'])
-pprint(vk_foto.sizes_max()[1]['likes'])
-pprint(vk_foto.sizes_max()[2]['likes'])
-pprint(vk_foto.sizes_max()[3]['likes'])
-pprint(vk_foto.sizes_max()[4]['likes'])
-
-
-likes_name = vk_foto.sizes_max()[0]['likes']
-url_name = vk_foto.sizes_max()[0]['url']
+# likes_name = vk_foto.sizes_max()[0]['likes']
+# url_name = vk_foto.sizes_max()[0]['url']
 
 HEADERS = {
     "Authorization": f"OAuth {token_ya}"
@@ -70,10 +68,9 @@ class YaUploader:
         """Метод загруджает файл file_path на яндекс диск"""
         response = requests.post(
             "https://cloud-api.yandex.net/v1/disk/resources/upload",
-
             params={
-                "path": 'VK_Photo/11',
-                "url": url_name
+                "path": f'/VK_Photo/{likes}',
+                "url": url
             },
             headers=HEADERS
         )
