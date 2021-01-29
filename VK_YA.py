@@ -70,13 +70,26 @@ class YaUploader:
             response = requests.post(
             "https://cloud-api.yandex.net/v1/disk/resources/upload",
             params={
-                "path": f'/VK_Photo/{likes}',
+                "path": f'/VK_Photo/{filename}',
                 "url": url
             },
             headers=HEADERS
-        )
+            )
+
         pprint(dict_photo)
+        response = requests.get(
+            "https://cloud-api.yandex.net/v1/disk/resources/upload",
+            params={
+                "path": "/VK_Photo/dict.txt"
+            },
+            headers=HEADERS
+        )
+        href = response.json()["href"]
+        with open("dict_photo", "rb") as f:
+            upload_response = requests.put(href, files={"file": f})
+            response.raise_for_status()
+
 if __name__ == '__main__':
-    uploader = YaUploader("token_ya")
-    result = uploader.upload('url')
+    uploader = YaUploader(token_ya)
+    result = uploader.upload('dict_photo')
 
