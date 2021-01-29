@@ -63,7 +63,10 @@ class YaUploader:
             url = pair['url']
             likes = pair['likes']
             size = pair['type']
-            dict_photo.append({"file_name": likes, "size": size})
+            ext = url.split('.')[-1].split('?')[0]
+            filename = f"{likes}.{ext}"
+
+            dict_photo.append({"file_name": filename, "size": size})
             response = requests.post(
             "https://cloud-api.yandex.net/v1/disk/resources/upload",
             params={
