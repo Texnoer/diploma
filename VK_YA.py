@@ -1,4 +1,5 @@
 import requests
+import json
 from pprint import pprint
 
 with open('token.txt', 'r') as file_object:
@@ -80,12 +81,13 @@ class YaUploader:
         response = requests.get(
             "https://cloud-api.yandex.net/v1/disk/resources/upload",
             params={
-                "path": "/VK_Photo/dict.txt"
+                "path": "/VK_Photo/dict.json"
             },
             headers=HEADERS
         )
-        href = response.json()["href"]
-        with open("dict_photo", "rb") as f:
+        href: object = response.json()["href"]
+
+        with open('dict_photo', 'rb') as f:
             upload_response = requests.put(href, files={"file": f})
             response.raise_for_status()
 
