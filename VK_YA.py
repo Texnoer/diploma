@@ -1,7 +1,7 @@
 import requests
 import json
 from pprint import pprint
-
+file_folder = 'C:/Folder/'
 with open('token.txt', 'r') as file_object:
     token = file_object.read().strip()
 
@@ -56,6 +56,7 @@ HEADERS = {
 class YaUploader:
     def __init__(self, token_ya):
         self.token_ya = token_ya
+        self.file_comp = file_folder
 
     def upload(self, file_path: str):
         """Метод загруджает файл file_path на яндекс диск"""
@@ -78,6 +79,18 @@ class YaUploader:
             )
 
         pprint(dict_photo)
+
+        response = requests.get(
+            "https://cloud-api.yandex.net/v1/disk/resources/upload",
+            params={
+                "path": self.file_comp
+            },
+            headers=HEADERS
+        )
+
+        with open(f'{self.file_comp}/dict.json', 'w') as f:
+            json.dump(dict_photo, f, indent=2)
+
         response = requests.get(
             "https://cloud-api.yandex.net/v1/disk/resources/upload",
             params={
@@ -87,11 +100,11 @@ class YaUploader:
         )
         href: object = response.json()["href"]
 
-        with open('dict_photo', 'rb') as f:
+        with open(f"{self.file_comp}/dict.json", 'rb') as f:
             upload_response = requests.put(href, files={"file": f})
             response.raise_for_status()
 
 if __name__ == '__main__':
     uploader = YaUploader(token_ya)
-    result = uploader.upload('dict_photo')
+    result = uploader.upload('file_comp')
 
