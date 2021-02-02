@@ -55,7 +55,7 @@ class YaUploader:
     def upload(self):
         """Метод загруджает файл file_path на яндекс диск"""
         dict_photo =[]
-        for pair in self.foto_likes:
+        for pair in tqdm(self.foto_likes):
             url = pair['url']
             likes = pair['likes']
             size = pair['type']
@@ -71,8 +71,6 @@ class YaUploader:
             },
             headers=self.HEADERS
             )
-
-        pprint(dict_photo)
 
         response = requests.get(
             "https://cloud-api.yandex.net/v1/disk/resources/upload",
