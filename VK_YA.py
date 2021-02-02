@@ -2,7 +2,7 @@ import requests
 import json
 from pprint import pprint
 from tqdm import tqdm
-file_folder = 'Folder'
+file_folder = '\Folder'
 with open('token.txt', 'r') as file_object:
     token = file_object.read().strip()
 
@@ -45,17 +45,14 @@ class VkUser:
             type_photo = max(sizes, key=self.get_largest)['type']
             self.list_photo.append({'url': max_size, 'likes': photo['likes']['count'], 'type': type_photo})
         return self.list_photo
-
-HEADERS = {
-    "Authorization": f"OAuth {token}"
-}
 class YaUploader:
     def __init__(self, token_ya):
         self.token_ya = token_ya
         self.file_comp = file_folder
         self.foto_likes = vk_foto.sizes_max()
+        self.HEADERS = {"Authorization": f"OAuth {token_ya}"}
 
-    def upload(self, file_path: str):
+    def upload(self):
         """Метод загруджает файл file_path на яндекс диск"""
         dict_photo =[]
         for pair in self.foto_likes:
@@ -72,7 +69,7 @@ class YaUploader:
                 "path": f'/VK_Photo/{filename}',
                 "url": url
             },
-            headers=HEADERS
+            headers=self.HEADERS
             )
 
         pprint(dict_photo)
@@ -82,7 +79,7 @@ class YaUploader:
             params={
                 "path": self.file_comp
             },
-            headers=HEADERS
+            headers=self.HEADERS
         )
 
         with open(f'{self.file_comp}/dict.json', 'w') as f:
@@ -93,7 +90,7 @@ class YaUploader:
             params={
                 "path": "/VK_Photo/dict.json"
             },
-            headers=HEADERS
+            headers=self.HEADERS
         )
         href: object = response.json()["href"]
 
@@ -106,5 +103,5 @@ if __name__ == '__main__':
     token_ya = input('Вставте токен с Полигона Яндекс.Диска: ')
     vk_foto = VkUser(token, '5.126')
     uploader = YaUploader(token_ya)
-    result = uploader.upload('file_comp')
+    result = uploader.upload()
 
