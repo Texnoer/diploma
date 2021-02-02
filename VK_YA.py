@@ -1,12 +1,11 @@
 import requests
 import json
 from pprint import pprint
-file_folder = 'C:/Folder/'
+from tqdm import tqdm
+file_folder = 'Folder'
 with open('token.txt', 'r') as file_object:
     token = file_object.read().strip()
 
-you_id = int(input('Введите id: '))
-token_ya = input('Вставте токен с Полигона Яндекс.Диска: ')
 class VkUser:
     url = 'https://api.vk.com/method/'
     def __init__(self, token, version):
@@ -28,7 +27,7 @@ class VkUser:
             'extended': True
             }
         photos = requests.get(foto_url, params={**self.params, **foto_params})
-        return photos.json()['response']['items']
+        return photos.json().get('response', {}).get('items', [])
 
     def get_largest(self, size_dict):
         """Функция ищет наибольший размер картинки"""
@@ -47,21 +46,19 @@ class VkUser:
             self.list_photo.append({'url': max_size, 'likes': photo['likes']['count'], 'type': type_photo})
         return self.list_photo
 
-vk_foto = VkUser(token, '5.126')
-foto_likes = vk_foto.sizes_max()
-
 HEADERS = {
-    "Authorization": f"OAuth {token_ya}"
+    "Authorization": f"OAuth {token}"
 }
 class YaUploader:
     def __init__(self, token_ya):
         self.token_ya = token_ya
         self.file_comp = file_folder
+        self.foto_likes = vk_foto.sizes_max()
 
     def upload(self, file_path: str):
         """Метод загруджает файл file_path на яндекс диск"""
         dict_photo =[]
-        for pair in foto_likes:
+        for pair in self.foto_likes:
             url = pair['url']
             likes = pair['likes']
             size = pair['type']
@@ -105,6 +102,9 @@ class YaUploader:
             response.raise_for_status()
 
 if __name__ == '__main__':
+    you_id = int(input('Введите id: '))
+    token_ya = input('Вставте токен с Полигона Яндекс.Диска: ')
+    vk_foto = VkUser(token, '5.126')
     uploader = YaUploader(token_ya)
     result = uploader.upload('file_comp')
 
