@@ -2,7 +2,7 @@ import requests
 import json
 from pprint import pprint
 from tqdm import tqdm
-file_folder = '\Folder'
+file_comp = '\Folder'
 with open('token.txt', 'r') as file_object:
     token = file_object.read().strip()
 
@@ -46,9 +46,9 @@ class VkUser:
             self.list_photo.append({'url': max_size, 'likes': photo['likes']['count'], 'type': type_photo})
         return self.list_photo
 class YaUploader:
-    def __init__(self, token_ya):
+    def __init__(self, token_ya, file_comp):
         self.token_ya = token_ya
-        self.file_comp = file_folder
+        self.file_comp = file_comp
         self.foto_likes = vk_foto.sizes_max()
         self.HEADERS = {"Authorization": f"OAuth {token_ya}"}
 
@@ -100,6 +100,6 @@ if __name__ == '__main__':
     you_id = int(input('Введите id: '))
     token_ya = input('Вставте токен с Полигона Яндекс.Диска: ')
     vk_foto = VkUser(token, '5.126')
-    uploader = YaUploader(token_ya)
+    uploader = YaUploader(token_ya, file_comp)
     result = uploader.upload()
 
